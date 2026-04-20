@@ -3,6 +3,7 @@ import {
   commandExit,
   commandExplore,
   commandHelp,
+  commandInspect,
   commandMapBack,
   commandMapForward,
 } from "./callbacks.js";
@@ -43,5 +44,10 @@ export const commands: Record<string, CLICommand> = {
     name: "catch <pokemon_name>",
     description: "Attempt to catch a pokemon",
     callback: commandCatch,
+  },
+  inspect: {
+    name: "inspect <pokemon_name>",
+    description: "View details about a caught pokemon",
+    callback: commandInspect,
   },
 };

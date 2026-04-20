@@ -1,4 +1,4 @@
-import { getLocations } from "../services/pokeapi.js";
+import { getLocation, getLocations } from "../services/pokeapi.js";
 
 import { commands } from "./commands.js";
 
@@ -27,7 +27,7 @@ export async function commandExit() {
   process.exit(0);
 }
 
-export async function commandMapForward(args: string[] | undefined) {
+export async function commandMapForward() {
   const locations = await getLocations(state.nextLocationsURL);
 
   state.nextLocationsURL = locations.next;
@@ -40,7 +40,7 @@ export async function commandMapForward(args: string[] | undefined) {
   console.log();
 }
 
-export async function commandMapBack(args: string[] | undefined) {
+export async function commandMapBack() {
   if (!state.prevLocationsURL) {
     throw new Error("\nyou're on the first page\n");
   }
@@ -55,4 +55,18 @@ export async function commandMapBack(args: string[] | undefined) {
     console.log(loc.name);
   }
   console.log();
+}
+
+export async function commandExplore(args: string[]) {
+  if (args.length !== 1) {
+    throw new Error("you must provide a location name");
+  }
+
+  const location = await getLocation(args[0]);
+
+  console.log(`Exploring ${args[0]}...`);
+  console.log("Found Pokemon:");
+  for (const enc of location.pokemon_encounters) {
+    console.log(` - ${enc.pokemon.name}`);
+  }
 }

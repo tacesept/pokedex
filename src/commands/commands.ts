@@ -1,5 +1,6 @@
 import {
   commandExit,
+  commandExplore,
   commandHelp,
   commandMapBack,
   commandMapForward,
@@ -8,7 +9,7 @@ import {
 interface CLICommand {
   name: string;
   description: string;
-  callback: (args?: string[]) => Promise<void>;
+  callback: (args: string[]) => Promise<void>;
 }
 
 export const commands: Record<string, CLICommand> = {
@@ -31,5 +32,10 @@ export const commands: Record<string, CLICommand> = {
     name: "mapb",
     description: "Get the previous page of locations",
     callback: commandMapBack,
+  },
+  explore: {
+    name: "explore <location_name>",
+    description: "Explore a location",
+    callback: commandExplore,
   },
 };

@@ -13,15 +13,15 @@ test.concurrent.each([
     interval: 1000, // 1 second
   },
 ])("Test Caching $interval ms", async ({ key, val, interval }) => {
-  const cache = createCache(interval);
+  const { getCache, setCache, destroyCache } = createCache(interval);
 
-  cache.set(key, val);
-  const cached = cache.get(key);
+  setCache(key, val);
+  const cached = getCache(key);
   expect(cached).toBe(val);
 
   await new Promise((resolve) => setTimeout(resolve, interval * 2));
-  const reaped = cache.get(key);
+  const reaped = getCache(key);
   expect(reaped).toBe(undefined);
 
-  cache.destroy();
+  destroyCache();
 });

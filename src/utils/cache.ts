@@ -3,8 +3,8 @@ interface CacheEntry<T> {
   val: T;
 }
 
-export function createCache<T>(interval: number) {
-  const storage = new Map<string, CacheEntry<T>>();
+export function createCache<T>(interval: number = 1000 * 60 * 5) {
+  const storage = new Map<string, CacheEntry<any>>();
 
   let cleanupInterval: NodeJS.Timeout | null = setInterval(() => {
     const now = Date.now();
@@ -17,7 +17,7 @@ export function createCache<T>(interval: number) {
   }, interval);
 
   return {
-    get: (key: string): T | undefined => {
+    getCache: <T>(key: string) => {
       const entry = storage.get(key);
       if (!entry) {
         return undefined;
@@ -28,15 +28,15 @@ export function createCache<T>(interval: number) {
         return undefined;
       }
 
-      return entry.val;
+      return entry.val as T;
     },
-    set: (key: string, value: T) => {
+    setCache: (key: string, value: T) => {
       storage.set(key, {
         createdAt: Date.now(),
         val: value,
       });
     },
-    destroy: () => {
+    destroyCache: () => {
       if (cleanupInterval) {
         clearInterval(cleanupInterval);
         cleanupInterval = null;

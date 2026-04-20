@@ -1,15 +1,22 @@
-import { getLocation, getLocations } from "../services/pokeapi.js";
+import {
+  getLocation,
+  getLocations,
+  getPokemon,
+  Pokemon,
+} from "../services/pokeapi.js";
 
 import { commands } from "./commands.js";
 
-interface LocationState {
+interface State {
   nextLocationsURL: string | null;
   prevLocationsURL: string | null;
+  caughtPokemon: Record<string, Pokemon>;
 }
 
-export const state: LocationState = {
+export const state: State = {
   nextLocationsURL: null,
   prevLocationsURL: null,
+  caughtPokemon: {},
 };
 
 export async function commandHelp() {
@@ -69,4 +76,24 @@ export async function commandExplore(args: string[]) {
   for (const enc of location.pokemon_encounters) {
     console.log(` - ${enc.pokemon.name}`);
   }
+}
+
+export async function commandCatch(args: string[]) {
+  if (args.length !== 1) {
+    throw new Error("you must provide a pokemon name");
+  }
+
+  const pokemon = await getPokemon(args[0]);
+
+  console.log(`Throwing a Pokeball at ${pokemon.name}...`);
+
+  const res = Math.floor(Math.random() * pokemon.base_experience);
+  if (res > 40) {
+    console.log(`${pokemon.name} escaped!`);
+    return;
+  }
+
+  console.log(`${pokemon.name} was caught!`);
+  console.log("You may now inspect it with the inspect command.");
+  state.caughtPokemon[pokemon.name] = pokemon;
 }

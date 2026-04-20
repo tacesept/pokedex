@@ -1,4 +1,5 @@
 import {
+  commandCatch,
   commandExit,
   commandExplore,
   commandHelp,
@@ -37,5 +38,10 @@ export const commands: Record<string, CLICommand> = {
     name: "explore <location_name>",
     description: "Explore a location",
     callback: commandExplore,
+  },
+  catch: {
+    name: "catch <pokemon_name>",
+    description: "Attempt to catch a pokemon",
+    callback: commandCatch,
   },
 };

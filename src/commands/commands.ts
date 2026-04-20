@@ -1,4 +1,9 @@
-import { commandExit, commandHelp } from "./callbacks.js";
+import {
+  commandExit,
+  commandHelp,
+  commandMapBack,
+  commandMapForward,
+} from "./callbacks.js";
 
 interface CLICommand {
   name: string;
@@ -16,5 +21,15 @@ export const commands: Record<string, CLICommand> = {
     name: "exit",
     description: "Exit the Pokedex",
     callback: commandExit,
+  },
+  map: {
+    name: "map",
+    description: "Get the next page of locations",
+    callback: commandMapForward,
+  },
+  mapb: {
+    name: "mapb",
+    description: "Get the previous page of locations",
+    callback: commandMapBack,
   },
 };

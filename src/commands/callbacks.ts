@@ -1,3 +1,5 @@
+import { getLocations } from "../services/pokeapi.js";
+import { state } from "../state.js";
 import { commands } from "./commands.js";
 
 export async function commandHelp() {
@@ -13,4 +15,34 @@ export async function commandHelp() {
 export async function commandExit() {
   console.log("Closing the Pokedex... Goodbye!");
   process.exit(0);
+}
+
+export async function commandMapForward(args: string[] | undefined) {
+  const locations = await getLocations(state.nextLocationsURL);
+
+  state.nextLocationsURL = locations.next;
+  state.prevLocationsURL = locations.previous;
+
+  console.log();
+  for (const loc of locations.results) {
+    console.log(loc.name);
+  }
+  console.log();
+}
+
+export async function commandMapBack(args: string[] | undefined) {
+  if (!state.prevLocationsURL) {
+    throw new Error("\nyou're on the first page\n");
+  }
+
+  const locations = await getLocations(state.prevLocationsURL);
+
+  state.nextLocationsURL = locations.next;
+  state.prevLocationsURL = locations.previous;
+
+  console.log();
+  for (const loc of locations.results) {
+    console.log(loc.name);
+  }
+  console.log();
 }

@@ -11,6 +11,11 @@ function main() {
 
   rl.prompt();
 
+  rl.on("SIGINT", () => {
+    console.log("\nClosing the Pokedex... Goodbye!");
+    process.exit(0);
+  });
+
   rl.on("line", async (input) => {
     const words = cleanInput(input);
 

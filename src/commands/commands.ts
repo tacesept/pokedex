@@ -6,6 +6,7 @@ import {
   commandInspect,
   commandMapBack,
   commandMapForward,
+  commandPokedex,
 } from "./callbacks.js";
 
 interface CLICommand {
@@ -49,5 +50,10 @@ export const commands: Record<string, CLICommand> = {
     name: "inspect <pokemon_name>",
     description: "View details about a caught pokemon",
     callback: commandInspect,
+  },
+  pokedex: {
+    name: "pokedex",
+    description: "See all the pokemon you've caught",
+    callback: commandPokedex,
   },
 };

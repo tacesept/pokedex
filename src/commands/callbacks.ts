@@ -120,3 +120,11 @@ export async function commandInspect(args: string[]) {
     console.log("  -", typeInfo.type.name);
   }
 }
+
+export async function commandPokedex() {
+  console.log("Your Pokedex:");
+
+  for (const pokemon of Object.values(state.caughtPokemon)) {
+    console.log(` - ${pokemon.name}`);
+  }
+}

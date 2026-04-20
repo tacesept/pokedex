@@ -1,6 +1,16 @@
 import { getLocations } from "../services/pokeapi.js";
-import { state } from "../state.js";
+
 import { commands } from "./commands.js";
+
+interface LocationState {
+  nextLocationsURL: string | null;
+  prevLocationsURL: string | null;
+}
+
+export const state: LocationState = {
+  nextLocationsURL: null,
+  prevLocationsURL: null,
+};
 
 export async function commandHelp() {
   console.log("\nWelcome to the Pokedex!");

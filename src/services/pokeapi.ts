@@ -1,6 +1,6 @@
 const BASE_URL = "https://pokeapi.co/api/v2";
 
-export async function getLocations(pageURL?: string) {
+export async function getLocations(pageURL: string | null) {
   const url = pageURL || `${BASE_URL}/location-area`;
 
   try {

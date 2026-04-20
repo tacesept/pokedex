@@ -2,76 +2,38 @@ import { createCache } from "../utils/cache.js";
 
 const BASE_URL = "https://pokeapi.co/api/v2";
 
-export async function getLocations(pageURL: string | null) {
-  const url = pageURL || `${BASE_URL}/location-area`;
-
+async function fetchWithCache<T>(url: string, context: string): Promise<T> {
   const { getCache, setCache } = createCache();
-  const cached = getCache<ShallowLocations>(url);
-  if (cached) {
-    return cached;
-  }
+  const cached = getCache<T>(url);
+  if (cached) return cached;
 
   try {
     const res = await fetch(url);
-
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
 
-    const locations: ShallowLocations = await res.json();
-    setCache(url, locations);
-    return locations;
+    const data: T = await res.json();
+    setCache(url, data);
+    return data;
   } catch (e) {
-    throw new Error(`Error fetching locations: ${(e as Error).message}`);
+    throw new Error(`Error fetching ${context}: ${(e as Error).message}`);
   }
+}
+
+export async function getLocations(pageURL: string | null) {
+  const url = pageURL || `${BASE_URL}/location-area`;
+  return fetchWithCache<ShallowLocations>(url, "locations");
 }
 
 export async function getLocation(locationName: string) {
   const url = `${BASE_URL}/location-area/${locationName}`;
-
-  const { getCache, setCache } = createCache();
-  const cached = getCache<Location>(url);
-  if (cached) return cached;
-
-  try {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`);
-    }
-
-    const location: Location = await res.json();
-    setCache(url, location);
-    return location;
-  } catch (e) {
-    throw new Error(
-      `Error fetching location '${locationName}': ${(e as Error).message}`,
-    );
-  }
+  return fetchWithCache<Location>(url, `location '${locationName}'`);
 }
 
 export async function getPokemon(pokemonName: string) {
   const url = `${BASE_URL}/pokemon/${pokemonName}`;
-
-  const { getCache, setCache } = createCache();
-  const cached = getCache<Pokemon>(url);
-  if (cached) return cached;
-
-  try {
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`);
-    }
-
-    const pokemon: Pokemon = await res.json();
-    setCache(url, pokemon);
-    return pokemon;
-  } catch (e) {
-    throw new Error(
-      `Error fetching location '${pokemonName}': ${(e as Error).message}`,
-    );
-  }
+  return fetchWithCache<Pokemon>(url, `pokemon '${pokemonName}'`);
 }
 
 export type ShallowLocations = {
